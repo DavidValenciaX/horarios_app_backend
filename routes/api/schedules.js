@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const auth = require('../../middleware/auth');
+import express from 'express';
+import auth from '../../middleware/auth.js';
 
-const ScheduleData = require('../../models/Schedule');
-const User = require('../../models/User');
+import ScheduleData from '../../models/Schedule.js';
+
+const router = express.Router();
 
 // @route   GET api/schedules
 // @desc    Get user's schedule data
@@ -113,4 +113,4 @@ router.post('/combinations', auth, (req, res) => {
 });
 
 
-module.exports = router; 
+export default router; 

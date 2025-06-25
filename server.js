@@ -1,7 +1,7 @@
 require('dotenv').config();
-const express = require('express');
-const connectDB = require('./config/db');
-const cors = require('cors');
+import express, { json } from 'express';
+import connectDB from './config/db';
+import cors from 'cors';
 
 const app = express();
 
@@ -10,7 +10,7 @@ connectDB();
 
 // Init Middleware
 app.use(cors());
-app.use(express.json({ extended: false }));
+app.use(json({ extended: false }));
 
 app.get('/', (req, res) => res.send('API Running'));
 
