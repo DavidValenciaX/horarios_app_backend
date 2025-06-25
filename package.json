@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for the Horarios App",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js"

@@ -1,7 +1,11 @@
-require('dotenv').config();
+import 'dotenv/config';
 import express, { json } from 'express';
-import connectDB from './config/db';
+import connectDB from './config/db.js';
 import cors from 'cors';
+
+import users from './routes/api/users.js';
+import auth from './routes/api/auth.js';
+import schedules from './routes/api/schedules.js';
 
 const app = express();
 
@@ -15,9 +19,9 @@ app.use(json({ extended: false }));
 app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes
-app.use('/api/users', require('./routes/api/users'));
-app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/schedules', require('./routes/api/schedules'));
+app.use('/api/users', users);
+app.use('/api/auth', auth);
+app.use('/api/schedules', schedules);
 
 const PORT = process.env.PORT || 5000;
 
