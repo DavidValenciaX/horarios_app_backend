@@ -1,10 +1,8 @@
 import { Router } from 'express';
 const router = Router();
 import bcrypt from 'bcryptjs';
-const { compare } = bcrypt;
 import auth from '../../middleware/auth.js';
 import jwt from 'jsonwebtoken';
-const { sign } = jwt;
 import { check, validationResult } from 'express-validator';
 
 import User from '../../models/User.js';
@@ -48,7 +46,7 @@ router.post(
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
       }
 
-      const isMatch = await compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
         return res
@@ -62,7 +60,7 @@ router.post(
         },
       };
 
-      sign(
+      jwt.sign(
         payload,
         process.env.JWT_SECRET,
         { expiresIn: '5 days' },
