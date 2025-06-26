@@ -38,7 +38,7 @@ router.get('/', auth, async (req, res) => {
     res.json(scheduleData);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server error' });
   }
 });
 
@@ -87,7 +87,7 @@ router.post('/', auth, async (req, res) => {
     res.json(scheduleData);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server error' });
   }
 });
 
@@ -180,7 +180,7 @@ router.post('/combinations', auth, (req, res) => {
 
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ msg: 'Server error' });
   }
 
 });
