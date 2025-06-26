@@ -1,18 +1,20 @@
 import { Router } from 'express';
 const router = Router();
-import { compare } from 'bcryptjs';
-import auth from '../../middleware/auth';
-import { sign } from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+const { compare } = bcrypt;
+import auth from '../../middleware/auth.js';
+import jwt from 'jsonwebtoken';
+const { sign } = jwt;
 import { check, validationResult } from 'express-validator';
 
-import { findById, findOne } from '../../models/User';
+import User from '../../models/User.js';
 
 // @route   GET api/auth
 // @desc    Get user by token
 // @access  Private
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -38,7 +40,7 @@ router.post(
     const { email, password } = req.body;
 
     try {
-      let user = await findOne({ email });
+      let user = await User.findOne({ email });
 
       if (!user) {
         return res
