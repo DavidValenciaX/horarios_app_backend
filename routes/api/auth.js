@@ -7,9 +7,27 @@ import { check, validationResult } from 'express-validator';
 
 import User from '../../models/User.js';
 
-// @route   GET api/auth
-// @desc    Get user by token
-// @access  Private
+
+/**
+ * @swagger
+ * /api/auth:
+ *   get:
+ *     summary: Get user by token
+ *     description: Get user by token
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: The user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Server error
+ */
+
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -20,9 +38,41 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/auth
-// @desc    Authenticate user & get token (Login)
-// @access  Public
+
+/**
+ * @swagger
+ * /api/auth:
+ *   post:
+ *     summary: Authenticate user & get token (Login)
+ *     description: Authenticate user & get token (Login)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
+ */
+
 router.post(
   '/',
   [

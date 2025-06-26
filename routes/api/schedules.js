@@ -5,9 +5,27 @@ import ScheduleData from '../../models/Schedule.js';
 
 const router = express.Router();
 
-// @route   GET api/schedules
-// @desc    Get user's schedule data
-// @access  Private
+
+/**
+ * @swagger
+ * /api/schedules:
+ *   get:
+ *     summary: Get user's schedule data
+ *     description: Get user's schedule data
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: The user's schedule data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduleData'
+ *       500:
+ *         description: Server error
+ */
+
 router.get('/', auth, async (req, res) => {
   try {
     const scheduleData = await ScheduleData.findOne({ user: req.user.id });
@@ -24,9 +42,33 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/schedules
-// @desc    Create or update user's schedule data
-// @access  Private
+
+/**
+ * @swagger
+ * /api/schedules:
+ *   post:
+ *     summary: Create or update user's schedule data
+ *     description: Create or update user's schedule data
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ScheduleData'
+ *     responses:
+ *       200:
+ *         description: The updated schedule data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduleData'
+ *       500:
+ *         description: Server error
+ */
+
 router.post('/', auth, async (req, res) => {
   const { scenarios, activeScenarioIndex } = req.body;
 
@@ -50,9 +92,40 @@ router.post('/', auth, async (req, res) => {
 });
 
 
-// @route   POST api/schedules/combinations
-// @desc    Calculate and return valid schedule combinations
-// @access  Private
+
+/**
+ * @swagger
+ * /api/schedules/combinations:
+ *   post:
+ *     summary: Calculate and return valid schedule combinations
+ *     description: Calculate and return valid schedule combinations
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               activities:
+ *                 type: array
+ *               days:
+ *                 type: array
+ *               timeSlots:
+ *                 type: array
+ *     responses:
+ *       200:
+ *         description: The valid schedule combinations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       500:
+ *         description: Server error
+ */
+
 router.post('/combinations', auth, (req, res) => {
   const { activities, days, timeSlots } = req.body;
 

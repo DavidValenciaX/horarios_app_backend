@@ -6,9 +6,43 @@ import User from '../../models/User.js';
 
 const router = express.Router();
 
-// @route   POST api/users
-// @desc    Register user
-// @access  Public
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Register user
+ *     description: Register user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Server error
+ */
+
 router.post(
   '/',
   [

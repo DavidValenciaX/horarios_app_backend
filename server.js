@@ -6,6 +6,8 @@ import cors from 'cors';
 import users from './routes/api/users.js';
 import auth from './routes/api/auth.js';
 import schedules from './routes/api/schedules.js';
+import swaggerUi from 'swagger-ui-express';
+import specs from './config/swagger.js';
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.get('/', (req, res) => res.send('API Running'));
 app.use('/api/users', users);
 app.use('/api/auth', auth);
 app.use('/api/schedules', schedules);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 const PORT = process.env.PORT || 5000;
 
