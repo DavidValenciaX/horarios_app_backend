@@ -127,7 +127,7 @@ router.post('/', auth, async (req, res) => {
  */
 
 router.post('/combinations', auth, (req, res) => {
-  const { activities, days, timeSlots } = req.body;
+  const { activities } = req.body;
 
   // --- Combination Logic (moved from frontend) ---
   
@@ -155,28 +155,12 @@ router.post('/combinations', auth, (req, res) => {
     }
     return allCombinations;
   };
-
-  const hasConflict = (scheduleCombination) => {
-    for (const day of days) {
-      for (const timeSlot of timeSlots) {
-        const schedulesInCell = scheduleCombination.filter(
-          (schedule) => schedule.timeTable[day]?.[timeSlot]
-        );
-        if (schedulesInCell.length > 1) {
-          return true; // Conflict found
-        }
-      }
-    }
-    return false; // No conflicts
-  };
   
   // --- Main Logic ---
 
   try {
     const allCombinations = getAllCombinations(activities, 0);
-    const validCombinations = allCombinations.filter(combo => !hasConflict(combo));
-    
-    res.json(validCombinations);
+    res.json(allCombinations);
 
   } catch (err) {
     console.error(err.message);
