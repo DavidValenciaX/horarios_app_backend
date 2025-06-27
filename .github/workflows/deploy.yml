@@ -36,5 +36,5 @@ jobs:
           ssh ubuntu@149.130.181.250 << 'EOF'
             cd /home/ubuntu/horarios_app_backend
             npm install --production
-            pm2 startOrRestart ecosystem.config.js
+            pm2 startOrRestart ecosystem.config.cjs
           EOF
