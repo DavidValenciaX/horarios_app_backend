@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   apps: [
     {
       name: 'horarios_app_backend',
