@@ -15,7 +15,7 @@ const app = express();
 connectDB();
 
 // Init Middleware
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(json({ extended: false }));
 
 app.get('/', (req, res) => res.send('API Running'));
