@@ -38,10 +38,10 @@ const options = {
         ScheduleData: {
           type: 'object',
           properties: {
-            scenarios: {
+            schedules: {
               type: 'array',
             },
-            activeScenarioIndex: {
+            activeScheduleIndex: {
               type: 'number',
             },
           },

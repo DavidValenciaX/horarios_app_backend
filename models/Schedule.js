@@ -13,7 +13,7 @@ const TimeTableSchema = new Schema({
   Domingo: { type: Object, default: {} },
 }, { _id: false });
 
-const ScheduleOptionSchema = new Schema({
+const ActivityScheduleOptionSchema = new Schema({
   index: { type: Number, required: true },
   timeTable: { type: TimeTableSchema, required: true },
   isActive: { type: Boolean, default: true },
@@ -23,7 +23,7 @@ const ScheduleOptionSchema = new Schema({
 const ActivitySchema = new Schema({
   name: { type: String, required: true },
   color: { type: String, required: true },
-  scheduleOptions: [ScheduleOptionSchema],
+  activityScheduleOptions: [ActivityScheduleOptionSchema],
   isActive: { type: Boolean, default: true },
 }, { _id: false });
 
@@ -31,7 +31,7 @@ const ActivityManagerSchema = new Schema({
   activities: [ActivitySchema],
 }, { _id: false });
 
-const ScenarioSchema = new Schema({
+const ScheduleSchema = new Schema({
   name: { type: String, required: true },
   activityManager: { type: ActivityManagerSchema, required: true },
 }, { _id: false });
@@ -44,8 +44,8 @@ const ScheduleDataSchema = new Schema({
     required: true,
     unique: true, // Each user has only one schedule document
   },
-  scenarios: [ScenarioSchema],
-  activeScenarioIndex: {
+  schedules: [ScheduleSchema],
+  activeScheduleIndex: {
     type: Number,
     default: -1,
   },

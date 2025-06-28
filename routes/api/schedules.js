@@ -70,12 +70,12 @@ router.get('/', auth, async (req, res) => {
  */
 
 router.post('/', auth, async (req, res) => {
-  const { scenarios, activeScenarioIndex } = req.body;
+  const { schedules, activeScheduleIndex } = req.body;
 
   const scheduleDataFields = {
     user: req.user.id,
-    scenarios,
-    activeScenarioIndex,
+    schedules,
+    activeScheduleIndex,
   };
 
   try {
@@ -143,12 +143,12 @@ router.post('/combinations', auth, (req, res) => {
     }
   
     const activity = activities[index];
-    for (const scheduleOption of activity.scheduleOptions) {
+    for (const activityScheduleOption of activity.activityScheduleOptions) {
       currentCombination.push({
-        ...scheduleOption,
+        ...activityScheduleOption,
         name: activity.name,
         color: activity.color,
-        totalScheduleOptions: activity.scheduleOptions.length,
+        totalActivityScheduleOptions: activity.activityScheduleOptions.length,
       });
       getAllCombinations(activities, index + 1, currentCombination, allCombinations);
       currentCombination.pop();
