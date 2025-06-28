@@ -29,6 +29,7 @@ jobs:
           rsync -avz --delete \
             --exclude=".git" \
             --exclude="node_modules" \
+            --exclude=".env" \
             ./ ubuntu@149.130.181.250:/home/ubuntu/horarios_app_backend
 
       - name: Install dependencies and restart app
