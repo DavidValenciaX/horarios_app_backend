@@ -16,7 +16,7 @@ connectDB();
 
 // Init Middleware
 app.use(cors({ origin: '*' }));
-app.use(json({ extended: false }));
+app.use(json({ limit: '50mb', extended: false }));
 
 app.get('/', (req, res) => res.send('API Running'));
 
