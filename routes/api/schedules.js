@@ -169,5 +169,101 @@ router.post('/combinations', auth, (req, res) => {
 
 });
 
+/**
+ * @swagger
+ * /api/schedules/activities/{scheduleIndex}/{activityIndex}/name:
+ *   patch:
+ *     summary: Update an activity's name
+ *     description: Update the name of a specific activity within a schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: scheduleIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Index of the schedule containing the activity
+ *       - in: path
+ *         name: activityIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Index of the activity to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: New name for the activity
+ *             required:
+ *               - name
+ *     responses:
+ *       200:
+ *         description: Activity name updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduleData'
+ *       400:
+ *         description: Invalid request parameters
+ *       404:
+ *         description: Schedule or activity not found
+ *       500:
+ *         description: Server error
+ */
+
+router.patch('/activities/:scheduleIndex/:activityIndex/name', auth, async (req, res) => {
+  const { scheduleIndex, activityIndex } = req.params;
+  const { name } = req.body;
+
+  // Validate input
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ msg: 'El nombre de la actividad es requerido' });
+  }
+
+  const scheduleIndexNum = parseInt(scheduleIndex);
+  const activityIndexNum = parseInt(activityIndex);
+
+  if (isNaN(scheduleIndexNum) || isNaN(activityIndexNum)) {
+    return res.status(400).json({ msg: 'Los índices deben ser números válidos' });
+  }
+
+  try {
+    let scheduleData = await ScheduleData.findOne({ user: req.user.id });
+    
+    if (!scheduleData) {
+      return res.status(404).json({ msg: 'No se encontraron datos de horarios para este usuario' });
+    }
+
+    // Validate schedule index
+    if (scheduleIndexNum < 0 || scheduleIndexNum >= scheduleData.schedules.length) {
+      return res.status(400).json({ msg: 'Índice de horario inválido' });
+    }
+
+    const schedule = scheduleData.schedules[scheduleIndexNum];
+    
+    // Validate activity index
+    if (activityIndexNum < 0 || activityIndexNum >= schedule.activityManager.activities.length) {
+      return res.status(400).json({ msg: 'Índice de actividad inválido' });
+    }
+
+    // Update the activity name
+    scheduleData.schedules[scheduleIndexNum].activityManager.activities[activityIndexNum].name = name.trim();
+
+    // Save the updated data
+    scheduleData = await scheduleData.save();
+    
+    res.json(scheduleData);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Error del servidor' });
+  }
+});
 
 export default router; 
