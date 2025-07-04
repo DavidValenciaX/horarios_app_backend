@@ -171,6 +171,89 @@ router.post('/combinations', auth, (req, res) => {
 
 /**
  * @swagger
+ * /api/schedules/{scheduleIndex}/name:
+ *   patch:
+ *     summary: Update a schedule's name
+ *     description: Update the name of a specific schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: scheduleIndex
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Index of the schedule to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: New name for the schedule
+ *             required:
+ *               - name
+ *     responses:
+ *       200:
+ *         description: Schedule name updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduleData'
+ *       400:
+ *         description: Invalid request parameters
+ *       404:
+ *         description: Schedule not found
+ *       500:
+ *         description: Server error
+ */
+
+router.patch('/:scheduleIndex/name', auth, async (req, res) => {
+  const { scheduleIndex } = req.params;
+  const { name } = req.body;
+
+  // Validate input
+  if (!name || name.trim() === '') {
+    return res.status(400).json({ msg: 'El nombre del horario es requerido' });
+  }
+
+  const scheduleIndexNum = parseInt(scheduleIndex);
+
+  if (isNaN(scheduleIndexNum)) {
+    return res.status(400).json({ msg: 'El índice debe ser un número válido' });
+  }
+
+  try {
+    let scheduleData = await ScheduleData.findOne({ user: req.user.id });
+    
+    if (!scheduleData) {
+      return res.status(404).json({ msg: 'No se encontraron datos de horarios para este usuario' });
+    }
+
+    // Validate schedule index
+    if (scheduleIndexNum < 0 || scheduleIndexNum >= scheduleData.schedules.length) {
+      return res.status(400).json({ msg: 'Índice de horario inválido' });
+    }
+
+    // Update the schedule name
+    scheduleData.schedules[scheduleIndexNum].name = name.trim();
+
+    // Save the updated data
+    scheduleData = await scheduleData.save();
+    
+    res.json(scheduleData);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Error del servidor' });
+  }
+});
+
+/**
+ * @swagger
  * /api/schedules/activities/{scheduleIndex}/{activityIndex}/name:
  *   patch:
  *     summary: Update an activity's name
